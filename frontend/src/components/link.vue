@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { LinkState, PluginInfo } from '@/app.vue';
-import { errors, fixableErrors } from '@/const';
 import { computed, ref } from 'vue';
+import type { LinkState } from '@/helpers';
+import { errors, fixableErrors, messages, useApi } from '@/helpers';
 
+const api = useApi();
 const props = defineProps<LinkState>();
-const emit = defineEmits([ 'toggleLink' ]);
 
 const advanced = ref<boolean>(false);
 const warning = ref<boolean>(false);
@@ -21,7 +21,8 @@ const selectedVersion = computed(() => {
 </script>
 
 <template>
-    <div :class="['bg-darkest p-5 rounded-xl flex flex-col gap-3 relative border-2', {'border-green-400': !warning && !error}, {'border-orange-400': warning}, {'border-red-400': error}]">
+    <div
+        :class="['bg-darkest p-5 rounded-xl flex flex-col gap-3 relative border-2', {'border-green-400': !warning && !error}, {'border-orange-400': warning}, {'border-red-400': error}]">
         <div class="absolute top-1 right-1 flex flex-col justify-end items-end text-right">
             <button @click="advanced = !advanced">
                 ...
@@ -84,7 +85,7 @@ const selectedVersion = computed(() => {
                         <input type="checkbox"
                                class="w-5"
                                v-model="preliminary.links[link]"
-                               @change="emit('toggleLink', { id: id, link, value: selected })">
+                               @change="api.sendMessage(messages.TOGGLE_LINK, { id: id, link, value: selected })">
                         <span class="text-xs">{{ link }}</span>
                     </div>
                 </template>
@@ -98,11 +99,9 @@ const selectedVersion = computed(() => {
             </div>
         </div>
 
-
         <div v-if="download">
             {{ download }}
         </div>
-
 
     </div>
 

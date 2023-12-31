@@ -1,4 +1,9 @@
 # Pack Builder
+A simple web app to build mod and plugin packs for clients. 
+
+Simply input a platform (such as Spigot, Fabric, Forge, etc), a version and a list of mods or plugins.
+
+---
 
 # Todo
 
@@ -8,10 +13,10 @@
 2. [x] POC for downloading SpigotMC plugins
 3. [ ] POC for downloading Bukkit plugins
 4. [ ] POC for downloading CurseForge plugins
-5. [ ] POC for downloading Modrinth plugins
+5. [x] POC for downloading Modrinth plugins
 6. [ ] Ability to determine client and server side mods apart
 7. [ ] POC for downloading to Dropbox
-8. [ ] POC for websockets
+8. [x] POC for websockets
 
 ## II. Implementations
 1. [x] SpigotMC plugins
@@ -19,11 +24,11 @@
 
 ## III. Backend API
 
-1. [ ] Create go app with basic web API setup
-2. [ ] Create route to submit a task
-3. [ ] Implement websocket for tracking task (long unique ID)
-4. [ ] Implement downloading POC
-5. [ ] Add a route for download the results
+1. [x] Create go app with basic web API setup
+2. [x] Create route to submit a task
+3. [x] Implement websocket for tracking task (long unique ID)
+4. [x] Implement downloading POC
+5. [x] Add a route for download the results
 6. [ ] Implement the Dropbox POC
 7. [ ] Implement uploading via SFTP/FTP
 8. [ ] Automatically delete sessions after 12 hours
