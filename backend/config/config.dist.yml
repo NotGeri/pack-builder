@@ -1,0 +1,17 @@
+web:
+  public-url: 'http://localhost'
+  frontend: 'http://localhost'
+  address: '0.0.0.0'
+  port: 80
+  ssl:
+    enabled: false
+    cert-path: 'ssl/public.cert'
+    key-path: 'ssl/private.key'
+
+credentials:
+  curseforge:
+    token: ''
+  github:
+    token: ''
+  modrinth:
+    token: ''
