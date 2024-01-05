@@ -83,7 +83,7 @@ func (i spigetInfo) ToPluginInfo() PluginInfo {
 				GameVersions: i.TestedVersions,
 			},
 		},
-		IconLink: i.Icon.Url,
+		IconLink: fmt.Sprintf("%s/%s", spigotUserAccessibleEndpoint, i.Icon.Url),
 	}
 }
 

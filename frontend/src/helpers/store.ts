@@ -17,7 +17,7 @@ export const useStore = defineStore('state', {
          * Clear the current section
          */
         clearSession() {
-            this.session = { links: {} };
+            this.session = { id: null, links: {} };
         },
 
         /**

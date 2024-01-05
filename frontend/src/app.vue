@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { sleep, useApi, useStore, version } from '@/helpers';
+import { type LinkState, sleep, useApi, useStore, version } from '@/helpers';
 import Link from '@/components/link.vue';
 import Request from '@/components/request.vue';
 import Report from '@/components/report.vue';
@@ -26,7 +26,7 @@ watch(() => store.session.id, async (newId) => {
         delete (query.session);
         await router.replace({ query });
     }
-});
+}, { deep: true });
 
 /**
  * When a page load, check if we have a session ID
@@ -58,7 +58,6 @@ onMounted(async () => {
     const session = await api.getSession(id);
     if (!session.success) return;
 
-
     // If it was found, update the data and open a socket
     if (session.raw?.ok && session.data) {
         store.updateSession(session.data, { fullSession: true });
@@ -75,6 +74,34 @@ const clearSession = () => {
     api.closeSocket();
     store.updateSession({ id: null, links: {}, overall_state: undefined, packages: {} }, { fullSession: true });
 };
+
+// Handle searching in links
+const search = ref<string>('');
+const filteredLinks = computed((): Record<string, LinkState> => {
+    if (!store.session.links) return {};
+
+    // If we do not have a search, just show all
+    const toSearch = search.value.toLowerCase();
+    if (!toSearch) return store.session.links;
+
+    // Filter links based on search value
+    return Object.entries(store.session.links).filter(([ key, state ]) => {
+
+        // Check the link itself
+        const linkMatches = state.link.includes(toSearch);
+
+        // If we have a plugin info, check that too
+        const pluginInfo = state.preliminary?.plugin_info;
+        if (!pluginInfo) return linkMatches;
+        const nameMatches = pluginInfo.name.toLowerCase().includes(toSearch);
+        const descriptionMatches = pluginInfo.description.toLowerCase().includes(toSearch);
+        return linkMatches || nameMatches || descriptionMatches;
+
+    }).reduce<Record<string, LinkState>>((acc, [ key, value ]) => {
+        acc[key] = value;
+        return acc;
+    }, {});
+});
 </script>
 
 <template>
@@ -86,10 +113,14 @@ const clearSession = () => {
     </div>
     <Request v-else/>
 
-    <div class="flex flex-col gap-3 mt-10">
-        <template v-for="[id, state] of Object.entries(store.session.links)" :key="id">
-            <Link v-bind="state"/>
-        </template>
+    <div v-if="filteredLinks" class="w-full flex flex-col items-center gap-3 mt-3">
+        <input type="text" v-model="search" class="w-52" placeholder="Type away to search.."/>
+
+        <div class="flex flex-col gap-3 px-10 max-w-6xl w-full">
+            <template v-for="[id, state] of Object.entries(filteredLinks)" :key="id">
+                <Link v-bind="state"/>
+            </template>
+        </div>
     </div>
 
     <Toolbar/>

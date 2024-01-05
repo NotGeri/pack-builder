@@ -33,9 +33,19 @@ const selectedVersion = computed(() => {
             </div>
         </div>
 
-        <a class="w-fit max-w-[90%]" target="_blank" :href="link">
-            <h1 class="text-xl whitespace-nowrap overflow-hidden block">{{ link }}</h1>
-        </a>
+        <div class="flex flex-row items-center gap-3">
+            <img v-if="preliminary?.plugin_info?.icon_link"
+                 class="w-8 h-8 rounded-xl"
+                 :src="preliminary?.plugin_info?.icon_link"
+                 :alt="`icon for ${preliminary.plugin_info.name}`"
+                 loading="lazy"
+                 draggable="false"
+            />
+
+            <a class="w-fit max-w-[90%]" target="_blank" :href="link">
+                <h1 class="text-xl whitespace-nowrap overflow-hidden block">{{ link }}</h1>
+            </a>
+        </div>
 
         <div v-if="preliminary" class="flex flex-col gap-5">
             <div v-if="preliminary.plugin_info">
